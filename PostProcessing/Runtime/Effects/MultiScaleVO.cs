@@ -463,8 +463,13 @@ namespace UnityEngine.Rendering.PostProcessing
             if (AOUpdateNeeded)
             {
                 RuntimeUtilities.Destroy(m_AmbientOnlyAO);
+                int width = context.width;
+#if UNITY_2019_1_OR_NEWER
+                if (context.stereoActive && (context.stereoRenderingMode == PostProcessRenderContext.StereoRenderingMode.SinglePass) && (context.camera.stereoTargetEye == StereoTargetEyeMask.Both))
+                    width *= 2;
+#endif
 
-                m_AmbientOnlyAO = new RenderTexture(context.width, context.height, 0, RenderTextureFormat.R8, RenderTextureReadWrite.Linear)
+                m_AmbientOnlyAO = new RenderTexture(width, context.height, 0, RenderTextureFormat.R8, RenderTextureReadWrite.Linear)
                 {
                     hideFlags = HideFlags.DontSave,
                     filterMode = FilterMode.Point,
